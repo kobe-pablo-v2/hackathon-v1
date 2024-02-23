@@ -1,16 +1,18 @@
 {
   "scripts": {
-    "dev": "wrangler dev src/index.ts",
-    "deploy": "wrangler deploy --minify src/index.ts",
+    "dev": "wrangler dev src/index.tsx",
+    "deploy": "wrangler deploy --minify src/index.tsx",
     "check": "bunx @biomejs/biome check --apply ."
   },
   "dependencies": {
     "hono": "^4.0.3",
+    "qr-image": "^3.2.0",
     "zod": "^3.22.4"
   },
   "devDependencies": {
     "@biomejs/biome": "1.5.3",
     "@cloudflare/workers-types": "^4.20240208.0",
+    "@types/qr-image": "^3.2.9",
     "wrangler": "^3.25.0"
   }
 }

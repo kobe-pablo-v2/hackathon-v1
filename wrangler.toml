@@ -1,6 +1,6 @@
 name = "backend"
 compatibility_date = "2023-12-01"
-main = "src/index.ts"
+main = "src/index.tsx"
 
 [[d1_databases]]
 binding = "DB" # i.e. available in your Worker on env.DB
