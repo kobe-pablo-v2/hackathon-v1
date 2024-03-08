@@ -185,6 +185,7 @@ const Confirmed = ({
   const [startTime, setStartTime] = useState<Dayjs>();
   const [endTime, setEndTime] = useState<Dayjs>();
   const [day, setDay] = useState<Dayjs>();
+  const [isSave, setIsSave] = useState(false);
 
   return (
     <div className="w-2/3 flex flex-col items-center gap-2 p-5">
@@ -192,7 +193,9 @@ const Confirmed = ({
       <div className="w-4/5 h-1/12 justify-between flex">
         <button
           type="button"
-          className="bg-cyan-400 w-2/5 text-white rounded-md hover:opacity-30 p-1"
+          className={`bg-cyan-400 w-2/5 text-white rounded-md hover:opacity-30 p-1 ${
+            isSave ? "animate-bounce" : ""
+          }`}
           onClick={async () => {
             const userIDs = new Set(confirmedShift.map((s) => s.id));
             const response: {
@@ -210,9 +213,10 @@ const Confirmed = ({
             await client.PATCH("/api/employer/confirmedShift", {
               body: response,
             });
+            setIsSave(false);
           }}
         >
-          UPLOAD
+          SAVE
         </button>
         <button
           type="button"
@@ -322,6 +326,7 @@ const Confirmed = ({
                             new Date(b.start).getTime(),
                         ),
                       );
+                      setIsSave(true);
                     }}
                     className={`p-2 text-white rounded-md ${
                       startTime == null ||
@@ -349,13 +354,14 @@ const Confirmed = ({
               <button
                 className="p-1 rounded-md bg-red-600 hover:opacity-30"
                 type="button"
-                onClick={() =>
+                onClick={() => {
                   setConfirmedShift((co) => [
                     ...co.filter(
                       (con) => !(con.id === c.id && con.start === c.start),
                     ),
-                  ])
-                }
+                  ]);
+                  setIsSave(true);
+                }}
               >
                 <IconContext.Provider value={{ color: "white" }}>
                   <BsTrash3 />
