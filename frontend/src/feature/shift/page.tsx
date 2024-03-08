@@ -286,16 +286,21 @@ const Confirmed = ({
                         .utc(endTime?.toISOString())
                         .local()
                         .format();
-                      console.log(dayIso.slice(0, -14) + startIso.slice(10));
 
-                      setConfirmedShift((c) => [
-                        ...c,
-                        {
-                          id: Number(userID),
-                          start: dayIso.slice(0, -14) + startIso.slice(10),
-                          end: dayIso.slice(0, -14) + endIso.slice(10),
-                        },
-                      ]);
+                      setConfirmedShift((c) =>
+                        [
+                          ...c,
+                          {
+                            id: Number(userID),
+                            start: dayIso.slice(0, -14) + startIso.slice(11),
+                            end: dayIso.slice(0, -14) + endIso.slice(11),
+                          },
+                        ].sort(
+                          (a, b) =>
+                            new Date(a.start).getTime() -
+                            new Date(b.start).getTime(),
+                        ),
+                      );
                     }}
                     className={`p-2 text-white rounded-md ${
                       startTime == null ||
@@ -334,7 +339,6 @@ const Confirmed = ({
                 <BsTrash3 />
               </IconContext.Provider>
             </button>
-            <p>{users.find((u) => u.id === c.id)?.label}</p>
             <p className="text-center w-1/12 text-lg font-bold">
               {start.toLocaleDateString().slice(-2).replace("/", "")}
             </p>
@@ -344,6 +348,7 @@ const Confirmed = ({
             <p className="rounded-md p-0.5 w-1/6 text-center bg-gray-100">
               {end.toLocaleTimeString().slice(0, -3)}
             </p>
+            <p>{users.find((u) => u.id === c.id)?.label}</p>
           </div>
         );
       })}
