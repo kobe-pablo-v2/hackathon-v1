@@ -2,7 +2,7 @@ import { TimePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import dayjs, { Dayjs } from "dayjs";
+import dayjs, { type Dayjs } from "dayjs";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import { StatusCodes } from "http-status-codes";
@@ -12,7 +12,7 @@ import { BsTrash3 } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 import Select from "react-select";
 import { client } from "../../api/clinent";
-import { components } from "../../api/v1";
+import type { components } from "../../api/v1";
 import { appURL } from "../../config/url";
 import LoadingSpinner from "../../ui/spiner";
 
