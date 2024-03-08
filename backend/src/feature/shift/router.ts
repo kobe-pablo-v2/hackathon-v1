@@ -55,7 +55,7 @@ export const ListShiftRequestInMonthRouter = createRoute({
 
 export const UpdateConfirmedShiftInMonthRouter = createRoute({
 	method: "patch",
-	path: "/api/employee/confirmedShift",
+	path: "/api/employer/confirmedShift",
 	request: {
 		body: {
 			content: {
