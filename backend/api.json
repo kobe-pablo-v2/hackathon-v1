@@ -580,7 +580,7 @@
 				}
 			}
 		},
-		"/api/employee/confirmedShift": {
+		"/api/employer/confirmedShift": {
 			"patch": {
 				"security": [{ "type": ["Bearer"], "in": ["headers"] }],
 				"requestBody": {
@@ -594,87 +594,6 @@
 				},
 				"responses": {
 					"200": { "description": "successfully update shift request" },
-					"400": {
-						"description": "bad request",
-						"content": {
-							"application/json": {
-								"schema": {
-									"type": "object",
-									"properties": { "message": { "type": "string" } },
-									"required": ["message"]
-								}
-							}
-						}
-					},
-					"401": {
-						"description": "unauthorized",
-						"content": {
-							"application/json": {
-								"schema": {
-									"type": "object",
-									"properties": { "message": { "type": "string" } },
-									"required": ["message"]
-								}
-							}
-						}
-					},
-					"403": {
-						"description": "not employer",
-						"content": {
-							"application/json": {
-								"schema": {
-									"type": "object",
-									"properties": { "message": { "type": "string" } },
-									"required": ["message"]
-								}
-							}
-						}
-					},
-					"500": {
-						"description": "internal server error",
-						"content": {
-							"application/json": {
-								"schema": {
-									"type": "object",
-									"properties": { "message": { "type": "string" } },
-									"required": ["message"]
-								}
-							}
-						}
-					}
-				}
-			},
-			"get": {
-				"security": [{ "type": ["Bearer"], "in": ["headers"] }],
-				"parameters": [
-					{
-						"schema": { "type": "string" },
-						"required": true,
-						"in": "query",
-						"name": "year"
-					},
-					{
-						"schema": { "type": "string" },
-						"required": true,
-						"in": "query",
-						"name": "month"
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "successfully update shift request",
-						"content": {
-							"application/json": {
-								"schema": {
-									"type": "array",
-									"items": {
-										"type": "array",
-										"items": { "type": "string", "format": "date-time" }
-									}
-								}
-							}
-						}
-					},
 					"400": {
 						"description": "bad request",
 						"content": {
@@ -894,6 +813,89 @@
 							"application/json": {
 								"schema": {
 									"$ref": "#/components/schemas/GetAttendanceInMonthResponseSchema"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "bad request",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": { "message": { "type": "string" } },
+									"required": ["message"]
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": { "message": { "type": "string" } },
+									"required": ["message"]
+								}
+							}
+						}
+					},
+					"403": {
+						"description": "not employer",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": { "message": { "type": "string" } },
+									"required": ["message"]
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": { "message": { "type": "string" } },
+									"required": ["message"]
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/employee/confirmedShift": {
+			"get": {
+				"security": [{ "type": ["Bearer"], "in": ["headers"] }],
+				"parameters": [
+					{
+						"schema": { "type": "string" },
+						"required": true,
+						"in": "query",
+						"name": "year"
+					},
+					{
+						"schema": { "type": "string" },
+						"required": true,
+						"in": "query",
+						"name": "month"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "successfully update shift request",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"type": "array",
+										"items": { "type": "string", "format": "date-time" }
+									}
 								}
 							}
 						}

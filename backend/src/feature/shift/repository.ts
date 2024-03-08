@@ -2,7 +2,7 @@ import { and, eq, like } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/d1";
 import * as schema from "../../db/schema";
 import { ToISOPrefixYearAndMonth } from "../../util/time/iso";
-import { ConfirmedShift } from "./entity";
+import { ConfirmedShift, ShiftRequest } from "./entity";
 import { ConfirmedShiftRepository, ShiftRequestRepository } from "./interface";
 
 export const useShiftRequestRepository = (
@@ -54,16 +54,15 @@ export const useShiftRequestRepository = (
 				.select()
 				.from(schema.ShiftRequestModel)
 				.where(like(schema.ShiftRequestModel.startTime, prefix));
-			return shifts
-				.map((s) => s.userID)
-				.map((userID) => {
-					return {
-						userID,
-						shiftTime: shifts
-							.filter((s) => s.userID === userID)
-							.map((s) => [s.startTime, s.endTime]),
-					};
-				});
+			const userIDs = new Set(shifts.map((s) => s.userID));
+			const response: ShiftRequest[] = [];
+			for (const userID of userIDs) {
+				const shiftTime: [string, string][] = shifts
+					.filter((s) => s.userID === userID)
+					.map((s) => [s.startTime, s.endTime]);
+				response.push({ userID, shiftTime });
+			}
+			return response;
 		},
 	};
 };

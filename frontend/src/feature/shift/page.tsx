@@ -34,6 +34,7 @@ type ConfirmedProps = {
   users: User[];
   confirms: ConfirmedShift[];
   setConfirmedShift: React.Dispatch<React.SetStateAction<ConfirmedShift[]>>;
+  confirmedShift: ConfirmedShift[];
   focusDay: dayjs.Dayjs;
 };
 
@@ -164,6 +165,7 @@ export const Shift = () => {
           confirms={confirmedShift}
           setConfirmedShift={setConfirmedShift}
           focusDay={selectedYearAndMonth}
+          confirmedShift={confirmedShift}
         />
         <Request users={users} shiftRequests={shiftRequests} />
       </div>
@@ -176,6 +178,7 @@ const Confirmed = ({
   confirms,
   setConfirmedShift,
   focusDay,
+  confirmedShift,
 }: ConfirmedProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [userID, setUserID] = useState<number>();
@@ -186,10 +189,28 @@ const Confirmed = ({
   return (
     <div className="w-2/3 flex flex-col items-center gap-2 p-5">
       <h2 className="text-2xl text-center font-bold">Confirmed</h2>
-      <div className="w-4/5 justify-between flex">
+      <div className="w-4/5 h-1/12 justify-between flex">
         <button
           type="button"
           className="bg-cyan-400 w-2/5 text-white rounded-md hover:opacity-30 p-1"
+          onClick={async () => {
+            const userIDs = new Set(confirmedShift.map((s) => s.id));
+            const response: {
+              userID: number;
+              shiftTime: [string, string][];
+            }[] = [];
+
+            for (const userID of userIDs) {
+              const shiftTime: [string, string][] = confirmedShift
+                .filter((s) => s.id === userID)
+                .map((s) => [s.start, s.end]);
+              response.push({ userID, shiftTime });
+            }
+
+            await client.PATCH("/api/employer/confirmedShift", {
+              body: response,
+            });
+          }}
         >
           UPLOAD
         </button>
@@ -319,39 +340,41 @@ const Confirmed = ({
           </div>
         )}
       </div>
-      {confirms.map((c) => {
-        const start = new Date(c.start);
-        const end = new Date(c.end);
-        return (
-          <div key={c.start + c.id} className="flex justify-between w-full">
-            <button
-              className="p-1 rounded-md bg-red-600 hover:opacity-30"
-              type="button"
-              onClick={() =>
-                setConfirmedShift((co) => [
-                  ...co.filter(
-                    (con) => !(con.id === c.id && con.start === c.start),
-                  ),
-                ])
-              }
-            >
-              <IconContext.Provider value={{ color: "white" }}>
-                <BsTrash3 />
-              </IconContext.Provider>
-            </button>
-            <p className="text-center w-1/12 text-lg font-bold">
-              {start.toLocaleDateString().slice(-2).replace("/", "")}
-            </p>
-            <p className="rounded-md p-0.5 w-1/6 text-center bg-gray-100">
-              {start.toLocaleTimeString().slice(0, -3)}
-            </p>
-            <p className="rounded-md p-0.5 w-1/6 text-center bg-gray-100">
-              {end.toLocaleTimeString().slice(0, -3)}
-            </p>
-            <p>{users.find((u) => u.id === c.id)?.label}</p>
-          </div>
-        );
-      })}
+      <div className="overflow-y-auto h-5/6 w-full flex flex-col gap-y-1">
+        {confirms.map((c) => {
+          const start = new Date(c.start);
+          const end = new Date(c.end);
+          return (
+            <div key={c.start + c.id} className="flex justify-between w-full">
+              <button
+                className="p-1 rounded-md bg-red-600 hover:opacity-30"
+                type="button"
+                onClick={() =>
+                  setConfirmedShift((co) => [
+                    ...co.filter(
+                      (con) => !(con.id === c.id && con.start === c.start),
+                    ),
+                  ])
+                }
+              >
+                <IconContext.Provider value={{ color: "white" }}>
+                  <BsTrash3 />
+                </IconContext.Provider>
+              </button>
+              <p className="text-center w-1/12 text-lg font-bold">
+                {start.toLocaleDateString().slice(-2).replace("/", "")}
+              </p>
+              <p className="rounded-md p-0.5 w-1/6 text-center bg-gray-100">
+                {start.toLocaleTimeString().slice(0, -3)}
+              </p>
+              <p className="rounded-md p-0.5 w-1/6 text-center bg-gray-100">
+                {end.toLocaleTimeString().slice(0, -3)}
+              </p>
+              <p>{users.find((u) => u.id === c.id)?.label}</p>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 };
@@ -360,8 +383,8 @@ const Request = ({ users, shiftRequests }: RequestProps) => {
   const [userID, setUserID] = useState<number>();
 
   return (
-    <div className="w-1/3 flex flex-col items-center gap-2 p-5">
-      <h2 className="text-2xl text-center font-bold">Request</h2>
+    <div className="w-1/3 h-11/12 flex flex-col items-center gap-2 p-5">
+      <h2 className="text-2xl h-1/12 text-center font-bold">Request</h2>
       <Select
         className="w-full"
         instanceId="search-select-box"
@@ -384,13 +407,16 @@ const Request = ({ users, shiftRequests }: RequestProps) => {
             return (
               <>
                 <p>{users.find((u) => u.id === shift.userID)?.label}</p>
-                <div className="flex flex-col w-full">
+                <div className="flex flex-col w-full h-5/6 gap-y-1 overflow-y-auto">
                   {shift.shiftTime.map((times) => {
                     const start = new Date(times[0]);
                     const end = new Date(times[1]);
                     return (
-                      <div className="w-full flex gap-x-3" key={`${times[0]}`}>
-                        <p className="text-center text-lg font-bold">
+                      <div
+                        className="w-full flex justify-between"
+                        key={`${times[0]}`}
+                      >
+                        <p className="text-center w-1/6 text-lg font-bold">
                           {start
                             .toLocaleDateString()
                             .slice(-2)

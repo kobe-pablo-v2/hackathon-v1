@@ -328,55 +328,7 @@ export interface paths {
       };
     };
   };
-  "/api/employee/confirmedShift": {
-    get: {
-      parameters: {
-        query: {
-          year: string;
-          month: string;
-        };
-      };
-      responses: {
-        /** @description successfully update shift request */
-        200: {
-          content: {
-            "application/json": string[][];
-          };
-        };
-        /** @description bad request */
-        400: {
-          content: {
-            "application/json": {
-              message: string;
-            };
-          };
-        };
-        /** @description unauthorized */
-        401: {
-          content: {
-            "application/json": {
-              message: string;
-            };
-          };
-        };
-        /** @description not employer */
-        403: {
-          content: {
-            "application/json": {
-              message: string;
-            };
-          };
-        };
-        /** @description internal server error */
-        500: {
-          content: {
-            "application/json": {
-              message: string;
-            };
-          };
-        };
-      };
-    };
+  "/api/employer/confirmedShift": {
     patch: {
       requestBody?: {
         content: {
@@ -533,6 +485,56 @@ export interface paths {
         200: {
           content: {
             "application/json": components["schemas"]["GetAttendanceInMonthResponseSchema"];
+          };
+        };
+        /** @description bad request */
+        400: {
+          content: {
+            "application/json": {
+              message: string;
+            };
+          };
+        };
+        /** @description unauthorized */
+        401: {
+          content: {
+            "application/json": {
+              message: string;
+            };
+          };
+        };
+        /** @description not employer */
+        403: {
+          content: {
+            "application/json": {
+              message: string;
+            };
+          };
+        };
+        /** @description internal server error */
+        500: {
+          content: {
+            "application/json": {
+              message: string;
+            };
+          };
+        };
+      };
+    };
+  };
+  "/api/employee/confirmedShift": {
+    get: {
+      parameters: {
+        query: {
+          year: string;
+          month: string;
+        };
+      };
+      responses: {
+        /** @description successfully update shift request */
+        200: {
+          content: {
+            "application/json": string[][];
           };
         };
         /** @description bad request */
